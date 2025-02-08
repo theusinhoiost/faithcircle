@@ -1,0 +1,24 @@
+{
+  "name": "-faithcircle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theusinhoiost/faithcircle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theusinhoiost/faithcircle/issues"
+  },
+  "homepage": "https://github.com/theusinhoiost/faithcircle#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
