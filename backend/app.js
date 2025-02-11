@@ -1,19 +1,25 @@
 const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-
-
-dotenv.config();
+const mongoose = require('mongoose');
+const userRoutes = require('./routes/userRoutes');
+const helmet = require("helmet");
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(express.json());  // Para ler JSON no body das requests
+app,use(helmet());
 
-app.get('/', (req, res) => {
-    res.send('API FaithCircle rodando!');
-});
+// Conexão com MongoDB
+mongoose.connect('mongodb://localhost:27017/faithcircle', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('Conectado ao MongoDB'))
+.catch(err => console.error('Erro ao conectar:', err));
 
-const PORT = 5000;
+// Rotas
+app.use('/api', userRoutes);  // Suas rotas estarão em /api/users
+
+// Porta do servidor
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require("validator");
 
+
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -13,6 +14,10 @@ const userSchema = new mongoose.Schema({
   },
   age: {
     type: Number,
+    required: true,
+  },
+  password: {
+    type: String,
     required: true,
   },
   email: {
@@ -37,11 +42,11 @@ const userSchema = new mongoose.Schema({
   religion: {
     type: String,
     required: true,
-    enum: ['Cristianismo', 'Islamismo', 'Judaísmo', 'Hinduísmo', 'Budismo', 'Agnóstico', 'Ateu', 'Outra'],
+    enum: ['Christianity', 'Islam', 'Judaism', 'Hinduism', 'Buddhism', 'Agnostic', 'Atheist', 'Other'],
   },
   preferredReligions: [{
     type: String,
-    enum: ['Cristianismo', 'Islamismo', 'Judaísmo', 'Hinduísmo', 'Budismo', 'Agnóstico', 'Ateu', 'Outra'],
+    enum: ['Christianity', 'Islam', 'Judaism', 'Hinduism', 'Buddhism', 'Agnostic', 'Atheist', 'Other'],
     required: true,
   }],
   createdAt: {
@@ -62,26 +67,24 @@ class User {
   async register() {
     this.validate();
     if (this.errors.length > 0) return;
-    await userModel.create(this.body); 
+    await userModel.create(this.body);
   }
-
+// Validate data from front
   validate() {
     this.cleanUp();
-
-    if (this.body.email && !validator.isEmail(this.body.email)) {
-      this.errors.push("Email inválido");
-    }
-    if (!this.body.firstName) {
-      this.errors.push("Nome é obrigatório");
-    }
-    if (!this.body.phone) {
-      this.errors.push("Telefone é obrigatório");
+    if (!validator.isEmail(this.body.email) && !this.body.firstName && !this.body.phone && this.body.referredReligions) {
+      this.errors.push("Informação obrigatória errada ou não preenchida");
     }
   }
 
   cleanUp() {
     for (const key in this.body) {
-      if (typeof this.body[key] !== 'string' && !Array.isArray(this.body[key]) && !(key === 'age' && typeof this.body[key] === 'number')) {
+      if (
+        typeof this.body[key] !== 'string' &&
+        !Array.isArray(this.body[key]) &&
+        !(key === 'age' && typeof this.body[key] === 'number') &&
+        !(key === 'address' && typeof this.body[key] === 'object')
+      ) {
         this.body[key] = '';
       }
     }
@@ -90,6 +93,7 @@ class User {
       firstName: this.body.firstName,
       lastName: this.body.lastName,
       age: this.body.age,
+      password: this.body.password,
       email: this.body.email,
       phone: this.body.phone,
       address: this.body.address,
@@ -99,4 +103,6 @@ class User {
   }
 }
 
-module.exports = { User};
+
+
+module.exports = { User };
